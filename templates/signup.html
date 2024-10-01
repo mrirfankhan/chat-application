@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>annonumus singup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>singup</h2>
+        <form method="POST" action="/singup">
+            <input type="text" name="username1" placeholder="Username" required>
+            <input type="password" name="password1" placeholder="Password" required>
+            <input type="password"  name="confi_pass" placeholder="confim password" required>
+            <button type="submit">Login</button>
+        </form>
+        <a href="/login">you have account login</a>
+    </div>
+</body>

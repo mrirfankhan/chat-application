@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+    
+    <div class="chat-container">
+
+        <div class="chat-window">
+            <h2 style="color: red;">Welcome {{ session["username"]}}</h2>
+            <a href="/logout" style="color: blueviolet;">Logout</a>
+            <div class="messages" id="messages"></div>
+        </div>
+        <input type="text" id="username" placeholder="Username" value={{session["username"]}} readonly>
+        <input type="text" id="message" placeholder="Type your message...">
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var socket = io.connect("http://localhost:5000"); // Use the correct port
+    
+            socket.on('connect', function() {
+                console.log("User connected!");
+            });
+    
+            socket.on('receiveMessage', function(data) {
+                $('#messages').append($('<div>').text(data.username + ': ' + data.message).addClass('message received-message'));
+            });
+    
+            $('#sendButton').on('click', function() {
+                var messageText = $('#message').val();
+                var username = $('#username').val() || "Anonymous";
+                if (messageText) {
+                    // Emit the message with the 'sendMessage' event
+                    socket.emit('sendMessage', { username: username, message: messageText });
+    
+                    // Append the user's own message to the chat window
+                    $('#messages').append($('<div>').text(username + ': ' + messageText).addClass('message user-message'));
+                    $('#message').val(""); // Clear the input field
+                }
+            });
+        });
+    </script>
+    
+    
+</body>
+
+</html>
